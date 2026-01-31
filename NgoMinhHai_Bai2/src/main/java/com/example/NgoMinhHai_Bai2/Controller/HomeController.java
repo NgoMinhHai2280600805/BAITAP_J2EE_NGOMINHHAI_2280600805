@@ -1,18 +1,15 @@
 package com.example.NgoMinhHai_Bai2.Controller;
 
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
 
-@RestController
+@Controller
 public class HomeController {
 
     @GetMapping("/")
-    public String home() {
-        return "Xin chào các bạn - Spring Boot chạy OK!";
-    }
-
-    @GetMapping("/hello")
-    public String hello() {
-        return "Hello from Spring Boot 👋";
+    public String index(Model model) {
+        model.addAttribute("message", "SANG SANG XINH VÃI");
+        return "index"; // trỏ tới index.html
     }
 }

@@ -1,46 +1,58 @@
 package com.example.NgoMinhHai_Bai2.Controller;
 
-import com.example.NgoMinhHai_Bai2.Model.Book;
-import com.example.NgoMinhHai_Bai2.Service.BookService;
+import com.example.NgoMinhHai_Bai2.model.Book;
+import com.example.NgoMinhHai_Bai2.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
-@RestController
-@RequestMapping("/api/books")
+@Controller
+@RequestMapping("/books")
 public class BookController {
 
     @Autowired
     private BookService bookService;
 
-    // GET all books
+    // Danh sách sách
     @GetMapping
-    public List<Book> getAllBooks() {
-        return bookService.getAllBooks();
+    public String listBooks(Model model) {
+        model.addAttribute("books", bookService.getAllBooks());
+        return "books";
     }
 
-    // GET book by id
-    @GetMapping("/{id}")
-    public Book getBookById(@PathVariable int id) {
-        return bookService.getBookById(id);
+    // Form thêm
+    @GetMapping("/add")
+    public String addBookForm(Model model) {
+        model.addAttribute("book", new Book());
+        return "add-book";
     }
 
-    // POST add book
-    @PostMapping
-    public Book addBook(@RequestBody Book book) {
-        return bookService.addBook(book);
+    // Thêm sách
+    @PostMapping("/add")
+    public String addBook(@ModelAttribute Book book) {
+        bookService.addBook(book);
+        return "redirect:/books";
     }
 
-    @PutMapping("/{id}")
-    public Book updateBook(@PathVariable int id, @RequestBody Book book) {
-        return bookService.updateBook(id, book);
+    // Form sửa
+    @GetMapping("/edit/{id}")
+    public String editBookForm(@PathVariable Long id, Model model) {
+        bookService.getBookById(id).ifPresent(book -> model.addAttribute("book", book));
+        return "edit-book";
     }
 
-    // DELETE book
-    @DeleteMapping("/{id}")
-    public String deleteBook(@PathVariable int id) {
-        boolean deleted = bookService.deleteBook(id);
-        return deleted ? "Deleted successfully" : "Book not found";
+    // Cập nhật
+    @PostMapping("/edit")
+    public String updateBook(@ModelAttribute Book book) {
+        bookService.updateBook(book);
+        return "redirect:/books";
+    }
+
+    // Xóa
+    @GetMapping("/delete/{id}")
+    public String deleteBook(@PathVariable Long id) {
+        bookService.deleteBook(id);
+        return "redirect:/books";
     }
 }
