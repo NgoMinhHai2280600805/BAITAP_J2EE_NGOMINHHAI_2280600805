@@ -1,4 +1,4 @@
-package com.example.NgoMinhHai_Bai2.Controller;
+package com.example.NgoMinhHai_Bai4.Controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
